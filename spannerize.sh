@@ -57,7 +57,7 @@ To enter DFU Mode:
 read -p "If the device is in DFU mode, press ENTER to continue"
 
 echo -e "\n--------> Flashing core Testboard firmware..."
-particle flash --usb hybrid-0.9.0-argon.bin
+particle flash --usb firmware/hybrid-0.9.0-argon.bin
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to flash core firmware! Aborting...${NOCOL}"
     exit 1
@@ -65,7 +65,7 @@ fi
 sleep 3
 
 echo -e "\n--------> Flashing Testboard firmware app..."
-particle flash --usb spanner_firmware.bin
+particle flash --usb firmware/spanner_firmware.bin
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to flash app firmware! Aborting...${NOCOL}"
     exit 1
