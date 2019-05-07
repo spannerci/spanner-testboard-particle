@@ -28,11 +28,11 @@ For Microsoft Windows 7, extra device drivers needed for Gen 3 devices (argon, x
 Provisioning will enable a Particle device to be used as a Spanner Testboard.
 For easy setup, the 'spannerize.sh' provisioning script is provided, just execute:
 
-'''./spannerize.sh'''
+```./spannerize.sh```
 
 and follow the instructions. If troubleshooting, all the particle cli commands 
 included in the script can be called directly from the shell, 
-e.g '''particle identify''' to get the device id.
+e.g `particle identify` to get the device id.
 
 The provided device id can be used to add the device as a new Testboard in the
 Spanner Web UI.
