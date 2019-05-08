@@ -87,7 +87,7 @@ fi
 sleep 3
 
 echo -e "\n"
-read -p "Please press the reset button in the device and then press ENTER to continue"
+read -p "Please put the device in listening mode and then press ENTER to continue"
 echo -e "\n--------> Getting Device ID..."
 sleep 3
 particle identify
