@@ -100,7 +100,7 @@ sleep 3
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     sudo systemctl stop ModemManager.service
 fi
-if [ $1 == "argon" ]; then
+if [ $1 != "xenon" ]; then
 
     echo -e "\n--------> Setting Wi-Fi Credentials"
     sleep 3
