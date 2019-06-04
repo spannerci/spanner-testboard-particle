@@ -68,7 +68,8 @@ elif [ $1 == "xenon" ]; then
 elif [ $1 == "photon" ]; then
     particle flash --usb firmware/system-part1-photon.bin
 else
-    echo "Undefined type of fevice"
+    echo "Undefined type of device"
+    exit 1
 fi
 
 if [ $? -ne 0 ]; then
