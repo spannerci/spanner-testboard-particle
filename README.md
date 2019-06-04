@@ -3,6 +3,8 @@ This repository contains resources to setup a Particle device as a Spanner Testb
 
 ## Supported Particle Devices
 * Argon
+* Photon
+* Xenon
 
 ## Supported Operating Systems
 * Linux Ubuntu
@@ -26,9 +28,10 @@ For Microsoft Windows 7, extra device drivers needed for Gen 3 devices (argon, x
 
 ## Provisioning
 Provisioning will enable a Particle device to be used as a Spanner Testboard.
-For easy setup, the 'spannerize.sh' provisioning script is provided, just execute:
+For easy setup, the 'spannerize.sh <device>' provisioning script is provided,
+e.g provisioning an argon device just execute:
 
-```./spannerize.sh```
+```./spannerize.sh argon```
 
 and follow the instructions. If troubleshooting, all the particle cli commands 
 included in the script can be called directly from the shell, 
