@@ -54,10 +54,24 @@ To enter DFU Mode:
 3. Wait for the LED to start flashing yellow (it will flash magenta first)
 4. Release the SETUP button\n"
 
+# set in DFU mode
+particle usb dfu
+sleep 3
 read -p "If the device is in DFU mode, press ENTER to continue"
 
+
 echo -e "\n--------> Flashing core Testboard firmware..."
-particle flash --usb firmware/hybrid-0.9.0-argon.bin
+if [ $1 == "argon" ]; then
+    particle flash --usb firmware/system-part1-argon.bin
+elif [ $1 == "xenon" ]; then
+    particle flash --usb firmware/system-part1-xenon.bin
+elif [ $1 == "photon" ]; then
+    particle flash --usb firmware/system-part1-photon.bin
+else
+    echo "Undefined type of device"
+    exit 1
+fi
+
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to flash core firmware! Aborting...${NOCOL}"
     exit 1
@@ -65,30 +79,60 @@ fi
 sleep 3
 
 echo -e "\n--------> Flashing Testboard firmware app..."
-particle flash --usb firmware/spanner_firmware.bin
+sleep 3
+
+if [ $1 == "argon" ]; then
+    particle flash --usb firmware/spanner_testboard_argon_v1.9.1.bin
+elif [ $1 == "xenon" ]; then
+    particle flash --usb firmware/spanner_testboard_xenon_v1.9.1.bin
+elif [ $1 == "photon" ]; then
+    particle flash --usb firmware/spanner_testboard_photon_v1.9.1.bin
+else
+    echo "Undefined type of device"
+fi
+
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to flash app firmware! Aborting...${NOCOL}"
     exit 1
 fi
 sleep 3
 
-# Linux ModemManager thinks any new ttyACM device is a modem - also known as
-# the ttyACM0 drama!
+
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     sudo systemctl stop ModemManager.service
 fi
+if [ $1 != "xenon" ]; then
 
-echo -e "\n--------> Setting Wi-Fi Credentials"
-particle serial wifi
-if [ $? -ne 0 ]; then
-    echo -e "${RED}Failed to set wifi creds! Aborting...${NOCOL}"
-    exit 1
+    echo -e "\n--------> Setting Wi-Fi Credentials"
+    sleep 3
+    particle usb start-listening
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Failed to set in LISTENING MODE! Aborting...${NOCOL}"
+        exit 1
+    fi
+    sleep 3
+    particle serial wifi
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Failed to set wifi creds! Aborting...${NOCOL}"
+        exit 1
+    fi
+    sleep 3
 fi
-sleep 3
 
 echo -e "\n"
-read -p "Please put the device in listening mode and then press ENTER to continue"
+read -p "Please press ENTER to continue"
 echo -e "\n--------> Getting Device ID..."
+
+sleep 3
+
+# Set in listening mode
+particle usb start-listening
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Failed to set in LISTENING MODE! Aborting...${NOCOL}"
+    exit 1
+fi
+
 sleep 3
 particle identify
 if [ $? -ne 0 ]; then
@@ -101,13 +145,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     sudo systemctl start ModemManager.service
 fi
 
+particle usb reset
+
 echo -e "\n${CYAN}
 Great Job, your new Spanner Testboard is ready! 
 Now you can add it as a new Testboard in the Spanner CI platform by using
 the above device id.${NOCOL}"
-
-echo -e "${YELLOW}
-Note: if the device is flashing blue, press the MODE button for ~8 seconds.
-As soon as you release it, it will start flashing green and the device will 
-try to connect to the network. A steady cyan color means that the device is 
-connected and ready to be used.${NOCOL}\n"
